@@ -164,14 +164,6 @@
   margin-bottom: 1.5rem;
 }
 
-.tag {
-  background: #f1f5f9;
-  color: var(--dark-800);
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-size: 0.7rem;
-  font-weight: 600;
-}
 
 .card-footer {
   display: flex;
@@ -211,6 +203,9 @@
 }
 
 .btn-details {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--bg-app);
   color: var(--dark-800);
   border: 1px solid #e2e8f0;
@@ -219,6 +214,7 @@
   font-size: 0.85rem;
   font-weight: 600;
   transition: var(--transition-fast);
+  text-decoration: none; /* Para tag <a> */
 }
 
 .btn-details:hover {

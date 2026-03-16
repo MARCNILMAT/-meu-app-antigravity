@@ -148,7 +148,14 @@ export default function Results({ searchParams, isLoading }) {
                             <span className="amount">{offer.price}</span>
                           </div>
                         </div>
-                        <button className="btn-details">Detalhes</button>
+                        <a 
+                          href={`https://www.google.com/search?q=${encodeURIComponent(offer.title + ' ' + offer.location)}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="btn-details"
+                        >
+                          Detalhes
+                        </a>
                       </div>
                     </div>
                   </div>
