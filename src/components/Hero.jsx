@@ -16,9 +16,13 @@ export default function Hero({ onSearch }) {
   const [destination, setDestination] = useState('');
   const [origin, setOrigin] = useState('');
   
-  // Autocomplete state
-  const [suggestions, setSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  // Destination Autocomplete state
+  const [destSuggestions, setDestSuggestions] = useState([]);
+  const [showDestSuggestions, setShowDestSuggestions] = useState(false);
+
+  // Origin Autocomplete state
+  const [originSuggestions, setOriginSuggestions] = useState([]);
+  const [showOriginSuggestions, setShowOriginSuggestions] = useState(false);
 
   // Trip Type and Dates state
   const [tripType, setTripType] = useState('round'); // 'round' | 'oneway'
@@ -46,17 +50,37 @@ export default function Hero({ onSearch }) {
       const filtered = POPULAR_CITIES.filter(city => 
         city.toLowerCase().includes(val.toLowerCase())
       );
-      setSuggestions(filtered);
-      setShowSuggestions(true);
+      setDestSuggestions(filtered);
+      setShowDestSuggestions(true);
     } else {
-      setSuggestions([]);
-      setShowSuggestions(false);
+      setDestSuggestions([]);
+      setShowDestSuggestions(false);
     }
   };
 
-  const handleSelectCity = (city) => {
+  const handleOriginChange = (e) => {
+    const val = e.target.value;
+    setOrigin(val);
+    if (val.trim().length > 0) {
+      const filtered = POPULAR_CITIES.filter(city => 
+        city.toLowerCase().includes(val.toLowerCase())
+      );
+      setOriginSuggestions(filtered);
+      setShowOriginSuggestions(true);
+    } else {
+      setOriginSuggestions([]);
+      setShowOriginSuggestions(false);
+    }
+  };
+
+  const handleSelectDest = (city) => {
     setDestination(city);
-    setShowSuggestions(false);
+    setShowDestSuggestions(false);
+  };
+
+  const handleSelectOrigin = (city) => {
+    setOrigin(city);
+    setShowOriginSuggestions(false);
   };
 
   return (
@@ -149,9 +173,20 @@ export default function Hero({ onSearch }) {
                     type="text" 
                     placeholder="De onde você sai?" 
                     value={origin}
-                    onChange={(e) => setOrigin(e.target.value)}
+                    onChange={handleOriginChange}
                     required 
+                    autoComplete="off"
                   />
+                  {showOriginSuggestions && originSuggestions.length > 0 && (
+                    <div className="suggestions-dropdown glass">
+                      {originSuggestions.map((city, i) => (
+                        <div key={i} className="suggestion-item" onClick={() => handleSelectOrigin(city)}>
+                          <MapPin size={14} className="suggest-icon" />
+                          <span>{city}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <div className="input-group">
                   <label><DollarSign size={16} /> Orçamento Máximo: R$ {budget}</label>
@@ -177,10 +212,10 @@ export default function Hero({ onSearch }) {
                     required 
                     autoComplete="off"
                   />
-                  {showSuggestions && suggestions.length > 0 && (
+                  {showDestSuggestions && destSuggestions.length > 0 && (
                     <div className="suggestions-dropdown glass">
-                      {suggestions.map((city, i) => (
-                        <div key={i} className="suggestion-item" onClick={() => handleSelectCity(city)}>
+                      {destSuggestions.map((city, i) => (
+                        <div key={i} className="suggestion-item" onClick={() => handleSelectDest(city)}>
                           <MapPin size={14} className="suggest-icon" />
                           <span>{city}</span>
                         </div>
