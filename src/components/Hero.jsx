@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, MapPin, Calendar, Users, Hotel, Plane, Truck, Sparkles, ShieldCheck, ShieldAlert, DollarSign } from 'lucide-react';
+import { Search, MapPin, Calendar, Users, Hotel, Plane, Truck, Sparkles, ShieldCheck, DollarSign } from 'lucide-react';
 import './Hero.css';
 
 const POPULAR_CITIES = [
@@ -10,7 +10,6 @@ const POPULAR_CITIES = [
 
 export default function Hero({ onSearch }) {
   const [activeTab, setActiveTab ] = useState('hotel');
-  const [isPrivate, setIsPrivate] = useState(false);
   const [isCheapMode, setIsCheapMode] = useState(false);
   const [budget, setBudget] = useState(2500);
   const [destination, setDestination] = useState('');
@@ -33,11 +32,11 @@ export default function Hero({ onSearch }) {
     e.preventDefault();
     onSearch({
       destination: isCheapMode ? '' : destination,
-      origin: isCheapMode ? origin : '',
+      origin: origin, // Sempre incluído
       budget: isCheapMode ? parseInt(budget) : 99999,
       isCheapMode,
       activeTab: isCheapMode ? 'cheap' : activeTab,
-      isPrivate,
+      isPrivate: true, // Sempre ativo por baixo dos panos (mecanismo preservado)
       dateDeparture,
       dateReturn: tripType === 'round' ? dateReturn : ''
     });
@@ -98,7 +97,7 @@ export default function Hero({ onSearch }) {
         <p className="hero-subtitle">
           {isCheapMode 
             ? 'Diga-nos seu orçamento e nós encontramos os melhores destinos.' 
-            : 'Busca inteligente de viagens sem manipulação de preços por rastreios.'}
+            : 'Busca inteligente de viagens com proteção de dados contra rastreios.'}
         </p>
 
         {/* CONTROLS (Toggles) */}
@@ -111,15 +110,8 @@ export default function Hero({ onSearch }) {
             <DollarSign size={18} />
             <span>Explorar Barato</span>
           </button>
-
-          <button 
-            type="button"
-            className={`control-toggle ${isPrivate ? 'active' : ''}`}
-            onClick={() => setIsPrivate(!isPrivate)}
-          >
-            {isPrivate ? <ShieldCheck size={18} /> : <ShieldAlert size={18} />}
-            <span>Busca Privada {isPrivate ? 'On' : 'Off'}</span>
-          </button>
+          
+          {/* Botão Busca Privada Removido conforme pedido */}
         </div>
 
         {/* SEARCH FORM CONTAINER */}
@@ -202,6 +194,30 @@ export default function Hero({ onSearch }) {
               </div>
             ) : (
               <div className={`form-grid ${tripType === 'oneway' ? 'oneway-grid' : ''}`}>
+                
+                {/* NOVO CAMPO ORIGEM NA HOME PRINCIPAL */}
+                <div className="input-group">
+                  <label><MapPin size={16} /> Origem</label>
+                  <input 
+                    type="text" 
+                    placeholder="De onde você sai?" 
+                    value={origin}
+                    onChange={handleOriginChange}
+                    required 
+                    autoComplete="off"
+                  />
+                  {showOriginSuggestions && originSuggestions.length > 0 && (
+                    <div className="suggestions-dropdown glass">
+                      {originSuggestions.map((city, i) => (
+                        <div key={i} className="suggestion-item" onClick={() => handleSelectOrigin(city)}>
+                          <MapPin size={14} className="suggest-icon" />
+                          <span>{city}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
                 <div className="input-group destination-group">
                   <label><MapPin size={16} /> Destino</label>
                   <input 
